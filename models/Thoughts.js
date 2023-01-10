@@ -1,12 +1,16 @@
-const { Schema, model } = require('mongoose')
+const mongoose = require('mongoose')
 
-const ThoughtSchema = new Schema({
+const ThoughtSchema = new mongoose.Schema({
     thought: {
         type: String,
         required: "What is your thought?"
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Users'
     }
 })
 
-const Thoughts = model('Thoughts', ThoughtSchema)
+const Thoughts = mongoose.model('Thoughts', ThoughtSchema)
 
 module.exports = Thoughts

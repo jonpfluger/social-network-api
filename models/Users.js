@@ -1,7 +1,6 @@
-const { Schema, model } = require('mongoose')
-const ThoughtSchema = require('./Thoughts')
+const mongoose = require('mongoose')
 
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: "User needs a name."
@@ -12,9 +11,14 @@ const UserSchema = new Schema({
         default: 0,
     },
     location: String,
-    // thoughts: [ThoughtSchema],
+    thoughts: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Thoughts'
+        }
+    ]
 })
 
-const Users = model('Users', UserSchema)
+const Users = mongoose.model('Users', UserSchema)
 
 module.exports = Users

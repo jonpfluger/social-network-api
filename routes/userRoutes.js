@@ -1,43 +1,12 @@
-require('../config/connection')
-const express = require('express')
-const { Users } = require('../models')
+const router = require('express').Router()
+const usersController = require('../controllers/usersController.js')
 
-const app = express()
+router.get('/', usersController.find)
 
-app.use(express.json())
+router.post('/', usersController.create)
 
-app.get('/read', async (req, res) => {
-    try {
-        const result = await Users.find()
-        res.json(result)
-    } catch(err) {
-        res.status(500).json(err)
-    }
-})
+router.put('/update/:id', usersController.update)
 
-app.post('/create', async (req, res) => {
-    try {
-      const result = await Users.create(req.body)
-      res.json(result)
-    } catch(err) {
-      res.status(500).json(err)
-    }
-})
+router.delete('/delete/:id', usersController.delete)
 
-app.put('/update/:id', async (req, res) => {
-    try {
-        const result = await Users.findByIdAndUpdate(req.params.id, req.body)
-        res.json(result)
-    } catch(err) {
-        res.status(500).json(err)
-    }
-})
-
-app.delete('/delete/:id', async (req, res) => {
-    try {
-        const result = await Users.findByIdAndDelete(req.params.id)
-        res.json(result)
-    } catch(err) {
-        res.status(500).json(err)
-    }
-})
+module.exports = router
