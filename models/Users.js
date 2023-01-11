@@ -1,23 +1,39 @@
 const mongoose = require('mongoose')
 
 const UserSchema = new mongoose.Schema({
-    name: {
+    username: {
         type: String,
-        required: "User needs a name."
+        required: "User needs a name.",
+        unique: true,
+        trim: true
     },
-    age: {
-        type: Number,
-        required: "User needs an age.",
-        default: 0,
+    email: {
+        type: String,
+        required: "Email is required.",
+        unique: true,
+        match: [/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/, 'Email is not valid.']
     },
-    location: String,
     thoughts: [
         {
             type: mongoose.Schema.ObjectId,
             ref: 'Thoughts'
         }
-    ]
+    ],
+    friends: [
+        {
+            type: mongoose.Schema.ObjectId,
+            ref: 'Users'
+        }
+    ],
+}, {
+    toJSON: {
+        virtuals: true,
+    }
 })
+
+UserSchema.virtual('friendCount').get(function() {
+    return this.friends.length
+}) 
 
 const Users = mongoose.model('Users', UserSchema)
 
