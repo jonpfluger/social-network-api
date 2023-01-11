@@ -1,9 +1,17 @@
-const { Users } = require('../models')
+const { Users, Thoughts } = require('../models')
 
 module.exports = {
     find: async function (req, res) {
         try {
             const result = await Users.find()
+            res.json(result)
+        } catch(err) {
+            res.status(500).json(err)
+        }
+    },
+    findOne: async function (req, res) {
+        try {
+            const result = await Users.findById({_id: req.params.id})
             res.json(result)
         } catch(err) {
             res.status(500).json(err)
@@ -27,7 +35,38 @@ module.exports = {
     },
     delete: async function (req, res) {
         try {
-            const result = await Users.findByIdAndDelete(req.params.id)
+            const thoughtsResult = await Thoughts.deleteMany({
+                _id: { $in: thoughts }
+            })
+            const usersResult = await Users.findByIdAndDelete(req.params.id)
+            res.json(usersResult)
+        } catch(err) {
+            res.status(500).json(err)
+        }
+    },
+    addFriend: async function (req, res) {
+        try {
+            const result = await Users.findByIdAndUpdate({
+                _id: req.params.userId
+            },
+            {
+                $push: {friends: req.params.friendId}
+            },
+            { new: true })
+            res.json(result)
+        } catch(err) {
+            res.status(500).json(err)
+        }
+    },
+    removeFriend: async function (req, res) {
+        try {
+            const result = await Users.findByIdAndUpdate({
+                _id: req.params.userId
+            },
+            {
+                $pull: {friends: req.params.friendId}
+            },
+            { new: true })
             res.json(result)
         } catch(err) {
             res.status(500).json(err)
