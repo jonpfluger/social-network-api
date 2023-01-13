@@ -35,8 +35,10 @@ module.exports = {
     },
     delete: async function (req, res) {
         try {
+            const foundUser = await Users.findById(req.params.id)
+            console.log(foundUser)
             const thoughtsResult = await Thoughts.deleteMany({
-                _id: { $in: thoughts }
+                _id: { $in: foundUser.thoughts }
             })
             const usersResult = await Users.findByIdAndDelete(req.params.id)
             res.json(usersResult)
